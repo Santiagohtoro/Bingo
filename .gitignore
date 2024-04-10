@@ -1,0 +1,13 @@
+# Archivos de entorno virtual
+venv/
+*.pyc
+
+# Archivos generados por Django
+__pycache__/
+*.sqlite3
+*.pyc
+*.pyo
+
+# Otros archivos generados
+*.swp
+.DS_Store
