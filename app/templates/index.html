@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container h-100 d-flex justify-content-center align-items-center">
+    <form  method="post">
+        {% csrf_token %}
+        
+        <div class="container ">
+            <p class="poppins-bold">A que sala te gustaria entrar?</p>
+            <input class="poppins-medium w-100 form-control" id="room-name-input"  name="room_name"  type="text" ><br>
+            <input class="btn btn-dark  poppins-medium w-100"  id="room-name-submit" type="submit" value="Enter">
+        </div>
+    </form> 
+</div>
+{% endblock %}
+
+    <!--<script>
+        document.querySelector('#room-name-input').focus();
+        document.querySelector('#room-name-input').onkeyup = function(e) {
+            if (e.key === 'Enter') {  // enter, return
+                document.querySelector('#room-name-submit').click();
+            }
+        };
+
+
+        document.querySelector('#room-name-submit').onclick = function(e) {
+            var roomName = document.querySelector('#room-name-input').value;
+            var userName = document.querySelector('#user-name-input').value;
+            var url = window.location.hostname
+            
+            window.location.pathname += roomName + '/';
+           
+        };
+
+    </script>-->

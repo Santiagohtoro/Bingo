@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container h-100 d-flex flex-column justify-content-center align-items-center">
+    <h1 class="poppins-bold">BINGO!</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="container">
+            <label class="poppins-medium w-100 " for="username">Nombre de Usuario:</label>
+            <input class="poppins-medium w-100 form-control" type="text" id="username" name="username" required>
+            <button class="btn btn-dark poppins-medium w-100" type="submit">Ingresar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
