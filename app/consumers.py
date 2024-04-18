@@ -5,6 +5,7 @@ from urllib.parse import parse_qs
 import random
 from channels.db import database_sync_to_async
 from .models import User
+from .funciones import * 
 
 class BingoConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -56,16 +57,15 @@ class BingoNumber(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(self.room_name, self.channel_name)
     
     async def send_number(self):
-        while True:
-                # Generate a random number
-                random_number = random.randint(1, 75)
-
-                # Send the random number to the room group
-                await self.channel_layer.group_send(
-                    self.room_name, {"type": "chat.message", "message": str(random_number)}
+        
+        balotas=simulador_bingo()
+        for i in balotas:
+        # Send the random number to the room group
+            await self.channel_layer.group_send(
+                self.room_name, {"type": "chat.message", "message": f"{i}"}
                 )
-                # Wait for 10 seconds before sending the next random number
-                await asyncio.sleep(10)
+            await asyncio.sleep(2)
+        # Wait for 10 seconds before sending the next random number
         # Receive message from room group
    
     
