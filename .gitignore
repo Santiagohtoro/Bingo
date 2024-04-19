@@ -11,3 +11,5 @@ __pycache__/
 # Otros archivos generados
 *.swp
 .DS_Store
+
+staticfiles/
