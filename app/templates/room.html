@@ -4,8 +4,11 @@
     <div class="contenedorppal">
         <div class="dash_info">
             {% if role == 'Administrador' %}
-                <p>tenes el poder</p>
+            <form method="post">
                 <button id="repartir-numero" type="button" class="btn btn-success">Repartir Tarjetones</button>
+                <button id="jugar" type="button" class="btn btn-success">Jugar</button>
+                <button id="parar" type="button" class="btn btn-success">Parar</button>
+            </form>
             {% endif %}
             <h1>Sala: {{ room_name }}</h1>
             <p>Bienvenido, {{ username }}!</p> 

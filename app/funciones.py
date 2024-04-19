@@ -52,7 +52,7 @@ def simulador_bingo():
         letra = obtener_letra(numero)
         balota = f"{letra}-{numero}"
         print(f"Balota Extraida: {balota}")
-        if len(numeros_extraidos)==10:
+        if len(numeros_extraidos)==74:
           break
 
     print("Números llamados hasta ahora:")
