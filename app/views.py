@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Room, User
+import random
+from django.http import JsonResponse
 
 
 def index(request):
@@ -37,7 +39,28 @@ def room_route(request, room_name, username):
     print(request)
     user=User.objects.get(userName=username)
     userRole = "Administrador" if user.admin else "Jugador"
-   
+    imgn = 3
     
-    return render(request, "room.html", {"room_name": room_name, 'username': username, 'role': userRole})
+    return render(request, "room.html", {"room_name": room_name, 'username': username, 'role': userRole, 'imgn': imgn})
 
+
+# def distribuir_numero(request, room_id):
+#     try:
+#         # Obtener la sala especificada por room_id
+#         sala = Room.objects.get(pk=room_id)
+        
+#         # Obtener todos los usuarios de la sala
+#         usuarios = User.objects.filter(room=sala)
+        
+#         # Generar número aleatorio del 1 al 20
+#         numero_aleatorio = random.randint(1, 20)
+        
+#         # Asignar el número aleatorio a todos los usuarios de la sala
+#         for usuario in usuarios:
+#             usuario.numero_aleatorio = numero_aleatorio
+#             usuario.save()
+        
+#         return JsonResponse({'numero_aleatorio': numero_aleatorio})
+    
+#     except Room.DoesNotExist:
+#         return JsonResponse({'error': 'La sala especificada no existe.'}, status=404)

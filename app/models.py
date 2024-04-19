@@ -13,6 +13,7 @@ class User(models.Model):
     userName= models.CharField(max_length=100)
     admin = models.BooleanField(default=False)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    
     # Otros campos del usuario, si es necesario
     
     def __str__(self):
