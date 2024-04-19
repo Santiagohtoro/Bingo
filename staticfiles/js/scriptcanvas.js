@@ -1,17 +1,17 @@
 var canvas, ctx;
+var imgn =document.querySelector(".numberTab");
 
-function draw(imgn) {
+function draw() {
     canvas = document.getElementById('bingo-canvas');
     ctx = canvas.getContext('2d');
-
+    number = imgn.textContent;
     // Cargar la imagen del cartón del bingo
     var img = new Image();
     img.onload = function () {
-        canvas.width = img.width;
-        canvas.height = img.height;
+        
         ctx.drawImage(img, 0, 0, 500, 800);
     };
-    img.src = "{% static 'img/Tarjetas/' %}" + imgn + ".png";
+    img.src = "../static/img/Tarjetas/" + number + ".png";
 
 
     // Manejar el clic del usuario en el canvas
@@ -22,8 +22,8 @@ function draw(imgn) {
 
 function drawCircle(x, y) {
     ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = 'red';
+    ctx.arc(x, y, 35, 0, Math.PI * 2);
+    ctx.fillStyle = `rgb(166, 100, 229, 0.6)`;
     ctx.fill();
     ctx.closePath();
 }
