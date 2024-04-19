@@ -1,21 +1,33 @@
-<!-- chat/templates/chat/room.html -->
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-    {% if role == 'Administrador' %}
-        <p>tenes el poder</p>
-    {% endif %}
-    <h1>Sala: {{ room_name }}</h1>
-    <p>Bienvenido, {{ username }}!</p> 
-    <div class="balota">
-        <h2 id="generated_number"></h2>
+    <div class="contenedorppal">
+        <div class="dash_info">
+            {% if role == 'Administrador' %}
+                <p>tenes el poder</p>
+            {% endif %}
+            <h1>Sala: {{ room_name }}</h1>
+            <p>Bienvenido, {{ username }}!</p> 
+            <div class="balota color-change-3x">
+                <h2 id="generated_number" class="poppins-black valorbalota"></h2>
+            </div>
+            <p>{{ role }}</p>
+        </div>
+        
+            <div class="tabla-bingo" onload="draw()">
+                <canvas id="bingo-canvas"width="500" height="800"></canvas>
+            </div>
+            <div class=" chat_container">
+                <textarea id="chat-log" cols="100" rows="20" class="form-control"></textarea><br>
+                <div class="input-group mb-3">
+                    <input id="chat-message-input"  class="form-control" type="text" size="100"><br>
+                    <input class="btn btn-light" type="button" id="chat-message-submit" type="button" value="Send">
+                </div>
+            </div>
+        
     </div>
-    <p>{{ role }}</p>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-    <input id="chat-message-input" type="text" size="100"><br>
-    <input id="chat-message-submit" type="button" value="Send">
     {{ room_name|json_script:"room-name" }}
-    
+   
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
@@ -53,8 +65,6 @@
         };
 
         /*socket 2*/
-       
-
         const numberSocket = new WebSocket(
             'ws://'
             + window.location.host
@@ -71,5 +81,38 @@
         numberSocket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');
         };
+        
+        // Funciones para el canvas
+        var canvas, ctx;
+        
+        function draw() {
+            canvas = document.getElementById('bingo-canvas');
+            ctx = canvas.getContext('2d');
+
+            // Cargar la imagen del cartón del bingo
+            var img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, 500, 800);
+            };
+            img.src = "{% static 'img/tab1.jpg' %}";
+
+            // Manejar el clic del usuario en el canvas
+            canvas.addEventListener('mousedown', function(e) {
+                drawCircle(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            });
+        }
+
+        function drawCircle(x, y) {
+            ctx.beginPath();
+            ctx.arc(x, y, 35, 0, Math.PI * 2);
+            ctx.fillStyle = `rgb(166, 100, 229, 0.8)`;
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        // Llamar a la función draw para iniciar la carga del canvas
+        draw();
     </script>
+
 {% endblock %}
+

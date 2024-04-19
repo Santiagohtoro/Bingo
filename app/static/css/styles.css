@@ -108,10 +108,78 @@
     font-weight: 900;
     font-style: italic;
   }
-  
-
-  body{
-    height: 100vh;
-    background: #38a3a5;
-    background-image: url("../img/espacio.jpg");
+  .contenedorppal { 
+    height: 92vh ;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-areas:
+      "tabla-bingo tabla-bingo dash_info  dash_info"
+      "tabla-bingo tabla-bingo chat_container chat_container";
+      gap: 0px;
+    justify-content: space-evenly; /* Centra los elementos horizontalmente */
+    align-items: center;
+      /* Centra los elementos verticalmente */
   }
+  *{
+    font-family:  "Poppins", sans-serif ;
+    font-weight: 500;
+    font-style: normal;
+  }
+  .tabla-bingo { grid-area: tabla-bingo; }
+  
+  .dash_info { grid-area: dash_info; }
+  
+  .chat_container { grid-area: chat_container; }
+  
+  body{
+    height: calc(100vh - 80px);
+    background-image: url("../img/espacio.jpg");
+    
+  }
+  .navbar{
+    color: antiquewhite;
+  }
+
+  .balota{
+    border-radius: 100%;
+    width: 250px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .valorbalota{
+    font-size: 80px;
+  }
+ 
+  #bingo-canvas{
+    border: solid white 2px;
+  }
+
+  .color-change-3x {
+    -webkit-animation: color-change-3x 4s linear infinite alternate both;
+            animation: color-change-3x 4s linear infinite alternate both;
+  }
+
+@-webkit-keyframes color-change-3x {
+  0% {
+    background: #19dcea;
+  }
+  50% {
+    background: #b22cff;
+  }
+  100% {
+    background: #ea2222;
+  }
+}
+@keyframes color-change-3x {
+  0% {
+    background: #19dcea;
+  }
+  50% {
+    background: #b22cff;
+  }
+  100% {
+    background: #ea2222;
+  }
+}
