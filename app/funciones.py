@@ -78,3 +78,17 @@ def verificar_coincidencias(tarjetones, numeros_extraidos):
                         coincidencias.append(f"{letra}-{numero}")
         resultados[id_tarjeton] = coincidencias
     return resultados
+
+def generar_tablero(lim_inferior , lim_superior, numeros_extraidos):
+    Xo = int(time.time())
+    a = 1103515245
+    c = 12345
+    m = 32768
+
+    while True:
+        Xn = (a * Xo + c) % m
+        numero_aleatorio = lim_inferior + (Xn * (lim_superior - lim_inferior) // m)
+        if numero_aleatorio not in numeros_extraidos:
+            numeros_extraidos.add(numero_aleatorio)
+            return numero_aleatorio, numeros_extraidos
+        Xo = Xn

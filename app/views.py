@@ -11,7 +11,7 @@ def index(request):
 
         # Verificar si la sala ya existe en la base de datos
         existing_room = Room.objects.filter(room_name=room_name).exists()
-
+        
         if existing_room:
             # Si la sala ya existe, redirigir a la página de registro de usuario
             return redirect(register_username, room_name=room_name)
@@ -39,7 +39,7 @@ def room_route(request, room_name, username):
     print(request)
     user=User.objects.get(userName=username)
     userRole = "Administrador" if user.admin else "Jugador"
-    imgn = 3
+    imgn = random.randint(1,20)
     
     return render(request, "room.html", {"room_name": room_name, 'username': username, 'role': userRole, 'imgn': imgn})
 

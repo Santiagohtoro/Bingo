@@ -1,164 +1,177 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <div class="contenedorppal">
-        <div class="dash_info">
-            {% if role == 'Administrador' %}
-            <form method="post">
-                <button id="repartir-numero" type="button" class="btn btn-success">Repartir Tarjetones</button>
-                <button id="jugar" type="button" class="btn btn-success">Jugar</button>
-                <button id="parar" type="button" class="btn btn-success">Parar</button>
-            </form>
-            {% endif %}
-            <h1>Sala: {{ room_name }}</h1>
-            <p>Bienvenido, {{ username }}!</p> 
-            <div class="balota color-change-3x">
-                <h2 id="generated_number" class="poppins-black valorbalota"></h2>
-            </div>
-            <p>{{ role }}</p>
+<div class="contenedorppal">
+    <div class="dash_info">
+        {% if role == 'Administrador' %}
+        <form method="post">
+            <button id="repartir-numero" type="button" class="btn btn-success">Repartir Tarjetones</button>
+            <button id="jugar" type="button" class="btn btn-success">Jugar</button>
+            <button id="parar" type="button" class="btn btn-success">Parar</button>
+        </form>
+        <br>
+        <audio id="my-audio" autoplay>
+            <source src="{% static 'musica.mp3' %}" type="audio/mpeg">
+        </audio>
+        <button class="btn btn-success" onclick="toggleAudio()">Pausar/Reproducir</button>
+        {% endif %}
+        <h1>Sala: {{ room_name }}</h1>
+        <p>Bienvenido, {{ username }}!</p>
+        <div class="balota color-change-3x">
+            <h2 id="generated_number" class="poppins-black valorbalota"></h2>
         </div>
-            {% if role == 'Administrador' %}
-            <div class="container mt-5">
-                <h1>Buscar por ID</h1>
-                
-                <div class="form-group">
-                    <label for="idInput">Ingrese un número de ID:</label>
-                    <input type="text" class="form-control" id="idInput">
-                </div>
-                
-                <button class="btn btn-primary" onclick="buscarPorID()">Buscar</button>
-                
-                <h2 class="mt-3">Elementos encontrados:</h2>
-                
-                <div id="tableContainer" class="mt-3">
-                    <!-- Aquí se mostrará la tabla de elementos encontrados -->
-                </div>
-            </div>
-            {% endif %}
-            {% if role == 'Jugador' %}
-            <p class="numberTab">{{ imgn }}</p>
-            <div class="tabla-bingo" onload="draw()">
-                <canvas id="bingo-canvas"width="500" height="800"></canvas>
-            </div>
-            {% endif %}
-            <div class=" chat_container">
-                <textarea id="chat-log" cols="50" rows="10" class="form-control"></textarea><br>
-                <div class="input-group mb-3">
-                    <input id="chat-message-input"  class="form-control" type="text" size="100"><br>
-                    <input class="btn btn-light" type="button" id="chat-message-submit" type="button" value="Send">
-                </div>
-            </div>
-        
+        <p>{{ role }}</p>
     </div>
-    {{ room_name|json_script:"room-name" }}
-    <script src="{% static 'js/search.js' %}"></script>
-   <script src="{% static 'js/scriptcanvas.js' %}"></script>
-    <script>
-        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+    {% if role == 'Administrador' %}
+    <div class="container mt-5">
+        <h1>Buscar por ID</h1>
 
-        const chatSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/bingo/'
-            + roomName
-            + '/'
-        );
+        <div class="form-group">
+            <label for="idInput">Ingrese un número de ID:</label>
+            <input type="text" class="form-control" id="idInput">
+        </div>
 
-        chatSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.message + '\n');
-        };
+        <button class="btn btn-primary" onclick="buscarPorID()">Buscar</button>
 
-        chatSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
+        <h2 class="mt-3">Elementos encontrados:</h2>
 
-        document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
-            if (e.key === 'Enter') {  // enter, return
-                document.querySelector('#chat-message-submit').click();
-            }
-        };
-
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message
-            }));
-            messageInputDom.value = '';
-        };
-
-        /*socket 2*/
-        const numberSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/bingoNumber/'
-            + roomName
-            + '/'
-        );
-
-        numberSocket.onmessage = function(e) {
-            const data2 = JSON.parse(e.data);
-            document.querySelector('#generated_number').innerHTML = (data2.message );
-        };
-
-        numberSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
-        
-        
-        // botonRepartir.addEventListener('click', function() {
-        //         var room = roomName; // ID de la sala, debes obtenerlo de alguna manera dinámica si es necesario
-        //         var xhr = new XMLHttpRequest();
-        //         xhr.open('GET', '/repartir-numero/' + room, true);
-        //         xhr.onreadystatechange = function() {
-        //             if (xhr.readyState === XMLHttpRequest.DONE) {
-        //                 if (xhr.status === 200) {
-        //                     var respuesta = JSON.parse(xhr.responseText);
-        //                     var numeroAleatorio = respuesta.numero_aleatorio;
-        //                     cargarImagen(numeroAleatorio);
-        //                 } else {
-        //                     console.error('Error al hacer la solicitud:', xhr.status);
-        //                 }
-        //             }
-        //         };
-        //         xhr.send();
-        //     });
-
-
-        // Funciones para el canvas
-        // var canvas, ctx;
-        
-        // function draw(imgn) {
-        //     canvas = document.getElementById('bingo-canvas');
-        //     ctx = canvas.getContext('2d');
+        <div id="tableContainer" class="mt-3">
             
-        //     // Cargar la imagen del cartón del bingo
-        //     var img = new Image();
-        //     img.onload = function() {
-        //         ctx.drawImage(img, 0, 0, 500, 800);
-        //     };
-        //     img.src = "{% static 'img/Tarjetas/'|add:imgn|add:'.png' %}";
-        //     // img.src = "{% static 'img/Tarjetas/'|add:imgn|add:'.png' %}";
+        </div>
+    </div>
+    {% endif %}
+    {% if role == 'Jugador' %}
+    <p class="numberTab">{{ imgn }}</p>
+    <div class="tabla-bingo" onload="draw()">
+        <canvas id="bingo-canvas" width="500" height="800"></canvas>
+    </div>
+    {% endif %}
+    <div class=" chat_container">
+        <textarea id="chat-log" cols="50" rows="10" class="form-control"></textarea><br>
+        <div class="input-group mb-3">
+            <input id="chat-message-input" class="form-control" type="text" size="100"><br>
+            <input class="btn btn-light" type="button" id="chat-message-submit" type="button" value="Send">
+        </div>
+    </div>
 
-        //     // Manejar el clic del usuario en el canvas
-        //     canvas.addEventListener('mousedown', function(e) {
-        //         drawCircle(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
-        //     });
-        // }
+</div>
+{{ room_name|json_script:"room-name" }}
+<script src="{% static 'js/search.js' %}"></script>
+<script src="{% static 'js/scriptcanvas.js' %}"></script>
+<script>
+    var audio = document.getElementById("my-audio");
 
-        // function drawCircle(x, y) {
-        //     ctx.beginPath();
-        //     ctx.arc(x, y, 35, 0, Math.PI * 2);
-        //     ctx.fillStyle = `rgb(166, 100, 229, 0.8)`;
-        //     ctx.fill();
-        //     ctx.closePath();
-        // }
+    function toggleAudio() {
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    }
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
-        draw(imgn)
-        
-    </script>
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/bingo/'
+        + roomName
+        + '/'
+    );
+
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        document.querySelector('#chat-log').value += (data.message + '\n');
+    };
+
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function (e) {
+        if (e.key === 'Enter') {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function (e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+        messageInputDom.value = '';
+    };
+
+    /*socket 2*/
+    const numberSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/bingoNumber/'
+        + roomName
+        + '/'
+    );
+
+    numberSocket.onmessage = function (e) {
+        const data2 = JSON.parse(e.data);
+        document.querySelector('#generated_number').innerHTML = (data2.message);
+    };
+
+    numberSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+
+    // botonRepartir.addEventListener('click', function() {
+    //         var room = roomName; // ID de la sala, debes obtenerlo de alguna manera dinámica si es necesario
+    //         var xhr = new XMLHttpRequest();
+    //         xhr.open('GET', '/repartir-numero/' + room, true);
+    //         xhr.onreadystatechange = function() {
+    //             if (xhr.readyState === XMLHttpRequest.DONE) {
+    //                 if (xhr.status === 200) {
+    //                     var respuesta = JSON.parse(xhr.responseText);
+    //                     var numeroAleatorio = respuesta.numero_aleatorio;
+    //                     cargarImagen(numeroAleatorio);
+    //                 } else {
+    //                     console.error('Error al hacer la solicitud:', xhr.status);
+    //                 }
+    //             }
+    //         };
+    //         xhr.send();
+    //     });
+
+
+    // Funciones para el canvas
+    // var canvas, ctx;
+
+    // function draw(imgn) {
+    //     canvas = document.getElementById('bingo-canvas');
+    //     ctx = canvas.getContext('2d');
+
+    //     // Cargar la imagen del cartón del bingo
+    //     var img = new Image();
+    //     img.onload = function() {
+    //         ctx.drawImage(img, 0, 0, 500, 800);
+    //     };
+    //     img.src = "{% static 'img/Tarjetas/'|add:imgn|add:'.png' %}";
+    //     // img.src = "{% static 'img/Tarjetas/'|add:imgn|add:'.png' %}";
+
+    //     // Manejar el clic del usuario en el canvas
+    //     canvas.addEventListener('mousedown', function(e) {
+    //         drawCircle(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+    //     });
+    // }
+
+    // function drawCircle(x, y) {
+    //     ctx.beginPath();
+    //     ctx.arc(x, y, 35, 0, Math.PI * 2);
+    //     ctx.fillStyle = `rgb(166, 100, 229, 0.8)`;
+    //     ctx.fill();
+    //     ctx.closePath();
+    // }
+
+    draw(imgn)
+
+</script>
 
 {% endblock %}
-

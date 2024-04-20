@@ -5,7 +5,7 @@ function draw() {
     canvas = document.getElementById('bingo-canvas');
     ctx = canvas.getContext('2d');
     number = imgn.textContent;
-    // Cargar la imagen del cartón del bingo
+    
     var img = new Image();
     img.onload = function () {
         
@@ -14,7 +14,7 @@ function draw() {
     img.src = "../static/img/Tarjetas/" + number + ".png";
 
 
-    // Manejar el clic del usuario en el canvas
+    
     canvas.addEventListener('mousedown', function (e) {
         drawCircle(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
     });
