@@ -58,7 +58,7 @@ def simulador_bingo():
     print("Números llamados hasta ahora:")
     print(sorted(f"{obtener_letra(num)}-{num}" for num in numeros_extraidos))
     
-    bal=(sorted(f"{obtener_letra(num)}-{num}" for num in numeros_extraidos))
+    bal=(f"{obtener_letra(num)}-{num}" for num in numeros_extraidos)
     return bal
 
 def cargar_tarjetones(archivo_json):
